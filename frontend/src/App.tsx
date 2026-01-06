@@ -201,8 +201,21 @@ export default function App() {
             onClick={() => { setState(initialState); setCurrentAudioUrl(null); setShowEpisodes(false); }}
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-              <Podcast className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-white border border-gray-200 flex items-center justify-center overflow-hidden">
+              <svg viewBox="0 0 100 100" className="w-10 h-10">
+                <rect width="100" height="100" fill="white"/>
+                <path d="M28 28 C28 20, 34 14, 42 14 C50 14, 56 20, 56 28 L56 48 C56 56, 50 62, 42 62 C34 62, 28 56, 28 48 Z" fill="black"/>
+                <rect x="32" y="24" width="14" height="3" rx="1.5" fill="white"/>
+                <rect x="32" y="32" width="14" height="3" rx="1.5" fill="white"/>
+                <rect x="32" y="40" width="14" height="3" rx="1.5" fill="white"/>
+                <path d="M22 52 C22 68, 34 76, 42 76 C50 76, 62 68, 62 52" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round"/>
+                <rect x="39" y="76" width="6" height="8" fill="black"/>
+                <rect x="32" y="84" width="20" height="5" rx="2.5" fill="black"/>
+                <ellipse cx="72" cy="42" rx="18" ry="14" fill="black"/>
+                <path d="M58 52 L52 62 L62 54" fill="black"/>
+                <rect x="62" y="38" width="20" height="3" rx="1.5" fill="white"/>
+                <rect x="62" y="45" width="14" height="3" rx="1.5" fill="white"/>
+              </svg>
             </div>
             <div className="text-left">
               <h1 className="text-xl font-bold text-gray-900">Speech2Pod</h1>
