@@ -1,24 +1,32 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
+import sys
+
+print("Starting Speech2Pod backend...", flush=True)
 
 from app.config import get_settings
+print("Config loaded", flush=True)
+
 from app.database import init_db
+print("Database module loaded", flush=True)
+
 from app.routers import (
     analyze_router,
     extract_router,
     episodes_router,
     feed_router
 )
+print("Routers loaded", flush=True)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: initialize database
+    print("Initializing database...", flush=True)
     init_db()
+    print("Database initialized", flush=True)
     yield
-    # Shutdown: cleanup if needed
-    pass
+    print("Shutting down...", flush=True)
 
 
 settings = get_settings()
