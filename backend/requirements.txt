@@ -1,0 +1,17 @@
+fastapi
+uvicorn[standard]
+yt-dlp
+pydub
+anthropic
+boto3
+sqlalchemy
+psycopg2-binary
+alembic
+python-multipart
+feedgen
+python-dotenv
+httpx
+pydantic
+pydantic-settings
+aiofiles
+numpy

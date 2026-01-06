@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./data/speech2pod.db
+      - R2_ACCOUNT_ID=${R2_ACCOUNT_ID}
+      - R2_ACCESS_KEY_ID=${R2_ACCESS_KEY_ID}
+      - R2_SECRET_ACCESS_KEY=${R2_SECRET_ACCESS_KEY}
+      - R2_BUCKET_NAME=${R2_BUCKET_NAME:-speech2pod}
+      - R2_PUBLIC_URL=${R2_PUBLIC_URL}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - PODCAST_TITLE=${PODCAST_TITLE:-Speech2Pod}
+      - PODCAST_DESCRIPTION=${PODCAST_DESCRIPTION:-Political speeches converted to podcast format}
+      - PODCAST_AUTHOR=${PODCAST_AUTHOR:-Speech2Pod}
+      - PODCAST_EMAIL=${PODCAST_EMAIL:-podcast@example.com}
+      - PODCAST_BASE_URL=${PODCAST_BASE_URL:-http://localhost:8000}
+    volumes:
+      - ./backend/data:/app/data
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        - VITE_API_URL=http://localhost:8000
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  backend_data:
