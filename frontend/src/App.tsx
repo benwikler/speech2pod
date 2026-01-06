@@ -17,7 +17,7 @@ import {
   useCropAudio
 } from './hooks/useApi';
 import type { AppState } from './types';
-import { Podcast, ListMusic } from 'lucide-react';
+import { ListMusic } from 'lucide-react';
 
 const initialState: AppState = {
   step: 'input',
