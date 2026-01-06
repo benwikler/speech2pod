@@ -1,55 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from contextlib import asynccontextmanager
+import os
 import sys
 
-print("Starting Speech2Pod backend...", flush=True)
-
-from app.config import get_settings
-print("Config loaded", flush=True)
-
-from app.database import init_db
-print("Database module loaded", flush=True)
-
-from app.routers import (
-    analyze_router,
-    extract_router,
-    episodes_router,
-    feed_router
-)
-print("Routers loaded", flush=True)
-
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    print("Initializing database...", flush=True)
-    init_db()
-    print("Database initialized", flush=True)
-    yield
-    print("Shutting down...", flush=True)
-
-
-settings = get_settings()
+print("=== STARTING SPEECH2POD ===", file=sys.stderr, flush=True)
 
 app = FastAPI(
-    title=settings.app_name,
+    title="Speech2Pod",
     description="Convert YouTube videos to podcast episodes",
-    version="1.0.0",
-    lifespan=lifespan
+    version="1.0.0"
 )
 
-# CORS configuration for frontend
-# In production, set FRONTEND_URL environment variable
-import os
+# CORS
 frontend_url = os.getenv("FRONTEND_URL", "")
-allowed_origins = [
-    "http://localhost:5173",  # Vite dev server
-    "http://localhost:3000",
-]
+allowed_origins = ["http://localhost:5173", "http://localhost:3000"]
 if frontend_url:
     allowed_origins.append(frontend_url)
-# Allow any vercel.app subdomain
-allowed_origins.append("https://*.vercel.app")
 
 app.add_middleware(
     CORSMiddleware,
@@ -60,22 +26,31 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
-app.include_router(analyze_router)
-app.include_router(extract_router)
-app.include_router(episodes_router)
-app.include_router(feed_router)
-
-
-@app.get("/")
-async def root():
-    return {
-        "name": settings.app_name,
-        "version": "1.0.0",
-        "status": "running"
-    }
-
-
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
+@app.get("/")
+async def root():
+    return {"name": "Speech2Pod", "version": "1.0.0", "status": "running"}
+
+# Load routers
+try:
+    print("Loading database...", file=sys.stderr, flush=True)
+    from app.database import init_db
+    init_db()
+    print("Database initialized", file=sys.stderr, flush=True)
+
+    print("Loading routers...", file=sys.stderr, flush=True)
+    from app.routers import analyze_router, extract_router, episodes_router, feed_router
+    app.include_router(analyze_router)
+    app.include_router(extract_router)
+    app.include_router(episodes_router)
+    app.include_router(feed_router)
+    print("Routers loaded", file=sys.stderr, flush=True)
+except Exception as e:
+    print(f"STARTUP ERROR: {e}", file=sys.stderr, flush=True)
+    import traceback
+    traceback.print_exc()
+
+print("=== APP READY ===", file=sys.stderr, flush=True)
