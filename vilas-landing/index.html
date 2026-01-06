@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vilas</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3rem;
+      font-weight: 200;
+      letter-spacing: 0.5em;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+    }
+
+    .puzzle-section {
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .puzzle-question {
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      color: #e0e0e0;
+    }
+
+    .puzzle-hint {
+      font-size: 0.85rem;
+      color: #888;
+      margin-bottom: 1rem;
+      font-style: italic;
+    }
+
+    .puzzle-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      max-width: 200px;
+      margin: 0 auto 1.5rem;
+    }
+
+    .puzzle-btn {
+      aspect-ratio: 1;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      transition: all 0.2s;
+    }
+
+    .puzzle-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.05);
+    }
+
+    .puzzle-btn.selected {
+      background: #4ade80;
+      color: #000;
+    }
+
+    .puzzle-answer {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .puzzle-input {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      width: 120px;
+      text-align: center;
+    }
+
+    .puzzle-input::placeholder { color: #666; }
+
+    .puzzle-submit {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      transition: all 0.2s;
+    }
+
+    .puzzle-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .error-msg {
+      color: #f87171;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .contact-form {
+      display: none;
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .contact-form.visible {
+      display: block;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .contact-form h2 {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      font-family: inherit;
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: #888;
+    }
+
+    .send-btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color: #000;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .send-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 20px rgba(74, 222, 128, 0.4);
+    }
+
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .success-msg {
+      color: #4ade80;
+      margin-top: 1rem;
+    }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Vilas</h1>
+
+    <div class="puzzle-section" id="puzzleSection">
+      <p class="puzzle-question">
+        What comes next in this sequence?
+      </p>
+      <div class="puzzle-grid">
+        <button class="puzzle-btn">1</button>
+        <button class="puzzle-btn">1</button>
+        <button class="puzzle-btn">2</button>
+        <button class="puzzle-btn">3</button>
+        <button class="puzzle-btn">5</button>
+        <button class="puzzle-btn">8</button>
+        <button class="puzzle-btn">13</button>
+        <button class="puzzle-btn">21</button>
+        <button class="puzzle-btn">?</button>
+      </div>
+      <p class="puzzle-hint">Hint: Each number is the sum of the two before it</p>
+      <div class="puzzle-answer">
+        <input type="number" class="puzzle-input" id="puzzleInput" placeholder="??">
+        <button class="puzzle-submit" onclick="checkAnswer()">Enter</button>
+      </div>
+      <p class="error-msg" id="errorMsg"></p>
+    </div>
+
+    <div class="contact-form" id="contactForm">
+      <h2>You found me</h2>
+      <form id="messageForm" onsubmit="sendMessage(event)">
+        <div class="form-group">
+          <input type="text" id="name" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" placeholder="Your email" required>
+        </div>
+        <div class="form-group">
+          <textarea id="message" placeholder="Your message..." required></textarea>
+        </div>
+        <button type="submit" class="send-btn" id="sendBtn">Send Message</button>
+        <p class="success-msg hidden" id="successMsg">Message sent!</p>
+        <p class="error-msg hidden" id="formError"></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function checkAnswer() {
+      const input = document.getElementById('puzzleInput');
+      const answer = parseInt(input.value);
+      const errorMsg = document.getElementById('errorMsg');
+
+      if (answer === 34) {
+        document.getElementById('puzzleSection').classList.add('hidden');
+        document.getElementById('contactForm').classList.add('visible');
+      } else {
+        errorMsg.textContent = 'Not quite... try again!';
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    document.getElementById('puzzleInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') checkAnswer();
+    });
+
+    async function sendMessage(e) {
+      e.preventDefault();
+      const btn = document.getElementById('sendBtn');
+      const successMsg = document.getElementById('successMsg');
+      const formError = document.getElementById('formError');
+
+      btn.disabled = true;
+      btn.textContent = 'Sending...';
+      formError.classList.add('hidden');
+
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      try {
+        const response = await fetch('https://formsubmit.co/ajax/info@vilas.live', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ name, email, message })
+        });
+
+        if (response.ok) {
+          successMsg.classList.remove('hidden');
+          btn.textContent = 'Sent!';
+          document.getElementById('messageForm').reset();
+        } else {
+          throw new Error('Failed to send');
+        }
+      } catch (err) {
+        formError.textContent = 'Failed to send. Try emailing info@vilas.live directly.';
+        formError.classList.remove('hidden');
+        btn.disabled = false;
+        btn.textContent = 'Send Message';
+      }
+    }
+  </script>
+</body>
+</html>
