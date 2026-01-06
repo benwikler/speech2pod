@@ -1,10 +1,17 @@
 FROM python:3.11-slim
 
+# Install ffmpeg for audio processing
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Install only fastapi and uvicorn
-RUN pip install --no-cache-dir fastapi uvicorn
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app/main.py app/main.py
+# Copy application code
+COPY . .
+RUN mkdir -p /app/data
 
-CMD ["sh", "-c", "python -c \"import os; port=int(os.environ.get('PORT',8000)); print(f'Port: {port}'); import uvicorn; uvicorn.run('app.main:app', host='0.0.0.0', port=port)\""]
+# Start command - Railway injects PORT
+CMD ["sh", "-c", "python -c \"import os; port=int(os.environ.get('PORT',8000)); print(f'Starting on port {port}'); import uvicorn; uvicorn.run('app.main:app', host='0.0.0.0', port=port)\""]
