@@ -294,7 +294,7 @@ export default function App() {
 
             {/* Step: Extracting */}
             {state.step === 'extracting' && (
-              <ProcessingIndicator status={jobData?.status} />
+              <ProcessingIndicator />
             )}
 
             {/* Step: Editing */}
@@ -330,7 +330,7 @@ export default function App() {
                   onRegenerate={handleRegenerate}
                   onSaveDraft={() => handleSave(false)}
                   onPublish={() => handleSave(true)}
-                  isLoading={state.step === 'saving'}
+                  isLoading={false}
                 />
               </>
             )}

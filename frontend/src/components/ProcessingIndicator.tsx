@@ -1,8 +1,4 @@
-interface ProcessingIndicatorProps {
-  status?: string;
-}
-
-export function ProcessingIndicator({ status }: ProcessingIndicatorProps) {
+export function ProcessingIndicator() {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-8">
       {/* Spinning ring with static icon */}
