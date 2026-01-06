@@ -4,16 +4,22 @@ import os
 
 app = FastAPI(title="Speech2Pod")
 
-# CORS
+# CORS - allow Vercel and vilas.live domains
 frontend_url = os.getenv("FRONTEND_URL", "")
-allowed_origins = ["http://localhost:5173", "http://localhost:3000"]
+allowed_origins = [
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "https://speeches.vilas.live",
+    "https://www.speeches.vilas.live",
+    "https://vilas.live",
+]
 if frontend_url:
     allowed_origins.append(frontend_url)
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_origin_regex=r"https://.*\.(vercel\.app|vilas\.live)",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
