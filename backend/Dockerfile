@@ -21,5 +21,5 @@ RUN mkdir -p /app/data && chmod +x /app/start.sh
 # Expose port
 EXPOSE 8000
 
-# Run via start script
-CMD ["/app/start.sh"]
+# Run uvicorn with Python reading PORT env var
+CMD ["python", "-c", "import os; import uvicorn; uvicorn.run('app.main:app', host='0.0.0.0', port=int(os.environ.get('PORT', 8000)))"]
