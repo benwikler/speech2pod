@@ -15,11 +15,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
-# Create data directory for SQLite (local dev)
-RUN mkdir -p /app/data
+# Create data directory and make start script executable
+RUN mkdir -p /app/data && chmod +x /app/start.sh
 
 # Expose port
 EXPOSE 8000
 
-# Run the application (Railway sets PORT env var)
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Run via start script
+CMD ["/app/start.sh"]
