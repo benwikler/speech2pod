@@ -7,9 +7,10 @@ from dataclasses import dataclass
 
 from app.config import get_settings
 
-# FFmpeg binary paths (homebrew on macOS)
-FFMPEG = '/opt/homebrew/bin/ffmpeg'
-FFPROBE = '/opt/homebrew/bin/ffprobe'
+# FFmpeg binary paths - use system PATH
+import shutil
+FFMPEG = shutil.which('ffmpeg') or 'ffmpeg'
+FFPROBE = shutil.which('ffprobe') or 'ffprobe'
 
 
 @dataclass

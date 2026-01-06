@@ -106,7 +106,7 @@ class YouTubeService:
             'http_headers': {
                 'User-Agent': 'com.google.android.youtube/19.02.39 (Linux; U; Android 14) gzip',
             },
-            'ffmpeg_location': '/opt/homebrew/bin/',
+            # ffmpeg_location not needed - yt-dlp finds it in PATH
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -123,8 +123,10 @@ class YouTubeService:
         # Convert thumbnail to jpg if needed
         if actual_thumbnail and actual_thumbnail != thumbnail_path:
             import subprocess
+            import shutil
+            ffmpeg_path = shutil.which('ffmpeg') or 'ffmpeg'
             subprocess.run([
-                '/opt/homebrew/bin/ffmpeg', '-y', '-i', actual_thumbnail,
+                ffmpeg_path, '-y', '-i', actual_thumbnail,
                 '-vf', 'scale=1400:1400:force_original_aspect_ratio=decrease',
                 thumbnail_path
             ], capture_output=True)
