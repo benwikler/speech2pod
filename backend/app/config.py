@@ -17,8 +17,8 @@ class Settings(BaseSettings):
     app_name: str = "Speech2Pod"
     debug: bool = False
 
-    # Database
-    database_url: str = "sqlite:///./data/speech2pod.db"
+    # Database (use absolute path for Railway)
+    database_url: str = "sqlite:////app/data/speech2pod.db"
 
     # Cloudflare R2
     r2_account_id: str = ""
